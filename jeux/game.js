@@ -159,7 +159,6 @@ function updateGame() {
     player.velocityY += player.gravity;
     player.y += player.velocityY;
 
-    // Collision avec les grandes plateformes
     platforms.forEach(platform => {
         if (prevY + player.height <= platform.y && player.y + player.height >= platform.y &&
             player.x + player.width > platform.x && player.x < platform.x + platform.width && !player.canFallThrough) {
@@ -169,7 +168,6 @@ function updateGame() {
         }
     });
 
-    // Collision avec les petites plateformes
     smallPlatforms.forEach(platform => {
         if (prevY + player.height <= platform.y && player.y + player.height >= platform.y &&
             player.x + player.width > platform.x && player.x < platform.x + platform.width && !player.canFallThrough) {
@@ -179,7 +177,6 @@ function updateGame() {
         }
     });
 
-    // Collision avec les murs
     walls.forEach(wall => {
         if (wall.active && player.x + player.width > wall.x && player.x < wall.x + wall.width &&
             player.y + player.height > wall.y && player.y < wall.y + wall.height) {
@@ -216,7 +213,18 @@ function updateGame() {
         }
     });
 
-    // Mort si le joueur tombe dans le vide
+    buttons.forEach((button, index) => {
+        if (player.x + player.width > button.x && 
+            player.x < button.x + button.width &&
+            player.y + player.height > button.y && 
+            player.y < button.y + button.height) {
+          
+            if (walls[index] && walls[index].active && walls[index].color === button.color) {
+                walls[index].active = false;
+            }
+        }
+    });
+
     if (player.y > canvas.height) {
         resetGame();
     }
